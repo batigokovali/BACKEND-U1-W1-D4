@@ -27,7 +27,8 @@ blogpostsRouter.get("/", async (req, res, next) => {
 blogpostsRouter.get("/:blogpostID", async (req, res, next) => {
     try {
         const blogpostsArray = await getBlogposts()
-        const foundBlogpost = blogpostsArray.find(blogpost => blogpost.id = req.params.blogpostID)
+        const foundBlogpost = blogpostsArray.find(blogpost => blogpost.id === req.params.blogpostID)
+        console.log(foundBlogpost)
         if (foundBlogpost) {
             res.send(foundBlogpost)
         } else {

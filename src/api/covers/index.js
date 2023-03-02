@@ -1,8 +1,7 @@
 import Express from "express"
 import multer from "multer"
 import { extname } from "path"
-import { saveBlogpostCovers } from "../../lib/fs-tools.js"
-import { getBlogposts, writeBlogposts } from "../../lib/fs-tools.js";
+import { saveBlogpostCovers, getBlogposts, writeBlogposts } from "../../lib/fs-tools.js"
 
 const blogpostCoversRouter = Express.Router()
 
@@ -17,10 +16,10 @@ blogpostCoversRouter.post("/:blogpostID/uploadCover", multer().single("cover"), 
         const blogpostsArray = await getBlogposts()
         const index = blogpostsArray.findIndex(blogpost => blogpost.id === req.params.blogpostID)
         const oldBlogpost = blogpostsArray[index]
-        const updatedBlogpost = { ...oldBlogpost, ...req.body, coverURL: `localhost:3301/img/blogposts/${fileName}`, updatedAt: new Date() }
+        const updatedBlogpost = { ...oldBlogpost, ...req.body, coverURL: `http://localhost:3001/img/blogposts/${fileName}`, updatedAt: new Date() }
         blogpostsArray[index] = updatedBlogpost
         await writeBlogposts(blogpostsArray)
-        res.send({ message: "file uploaded :D" })
+        res.send({ message: "blogpost cover uploaded :D" })
     } catch (error) {
         next(error)
     }
