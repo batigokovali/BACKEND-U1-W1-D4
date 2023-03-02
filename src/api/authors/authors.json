@@ -1,0 +1,42 @@
+[
+    {
+        "name": "Bilbo",
+        "surname": "Gokovali",
+        "email": "bilbor@gattor.com",
+        "date-of-birth": "03-11-2503",
+        "avatar": "",
+        "createdAt": "2023-02-28T14:25:18.627Z",
+        "updatedAt": "2023-02-28T14:25:18.627Z",
+        "id": "dd82z1hfkleoccco4"
+    },
+    {
+        "name": "Kelek",
+        "surname": "Karpuz",
+        "email": "diyarbakirkarpuzlari@yahoo.com",
+        "date-of-birth": "03-11-2503",
+        "avatar": "",
+        "createdAt": "2023-02-28T14:51:27.394Z",
+        "updatedAt": "2023-02-28T14:51:27.394Z",
+        "id": "dd82z12yoleod9z4z"
+    },
+    {
+        "name": "Kelek",
+        "surname": "Karpuz 2",
+        "email": "kek@yahoo.com",
+        "date-of-birth": "03-11-2503",
+        "avatar": "",
+        "createdAt": "2023-02-28T14:53:27.411Z",
+        "updatedAt": "2023-02-28T14:53:27.411Z",
+        "id": "dd82z1k98leodcjqs"
+    },
+    {
+        "name": "water",
+        "surname": "hahaha :D",
+        "email": "water@yahoo.com",
+        "date-of-birth": "03-11-2503",
+        "avatar": "",
+        "createdAt": "2023-02-28T14:54:39.141Z",
+        "updatedAt": "2023-02-28T14:54:39.141Z",
+        "id": "dd82z1lt4leode33a"
+    }
+]
