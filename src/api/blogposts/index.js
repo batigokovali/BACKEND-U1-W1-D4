@@ -1,28 +1,22 @@
 import Express from "express";
-import fs, { write } from "fs";
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
 import uniqid from "uniqid"
 import createHttpError from "http-errors";
 import authorsRouter from "../authors/index.js";
 import { checkBlogpostsSchema, triggerBadRequest } from "./validation.js"
+import { getBlogposts, writeBlogposts } from "../../lib/fs-tools.js";
 
 const blogpostsRouter = Express.Router()
 
-const blogpostsJSONPath = join(dirname(fileURLToPath(import.meta.url)), "blogposts.json")
-const getBlogposts = () => JSON.parse(fs.readFileSync(blogpostsJSONPath))
-const writeBlogposts = blogpostsArray => fs.writeFileSync(blogpostsJSONPath, JSON.stringify(blogpostsArray))
-
-blogpostsRouter.post("/", checkBlogpostsSchema, triggerBadRequest, (req, res, next) => {
+blogpostsRouter.post("/", checkBlogpostsSchema, triggerBadRequest, async (req, res, next) => {
     const newBlogpost = { ...req.body, id: uniqid(), createdAt: new Date(), updatedAt: new Date() }
-    const blogpostsArray = getBlogposts()
+    const blogpostsArray = await getBlogposts()
     blogpostsArray.push(newBlogpost)
-    writeBlogposts(blogpostsArray)
+    await writeBlogposts(blogpostsArray)
     res.status(201).send({ id: newBlogpost.id })
 })
 
-blogpostsRouter.get("/", (req, res, next) => {
-    const blogposts = getBlogposts()
+blogpostsRouter.get("/", async (req, res, next) => {
+    const blogposts = await getBlogposts()
     if (req.query && req.query.category) {
         const filteredBlogposts = blogposts.filter(blogpost => blogpost.category === req.query.category)
         res.send(filteredBlogposts)
@@ -30,9 +24,9 @@ blogpostsRouter.get("/", (req, res, next) => {
     res.send(blogposts)
 })
 
-blogpostsRouter.get("/:blogpostID", (req, res, next) => {
+blogpostsRouter.get("/:blogpostID", async (req, res, next) => {
     try {
-        const blogpostsArray = getBlogposts()
+        const blogpostsArray = await getBlogposts()
         const foundBlogpost = blogpostsArray.find(blogpost => blogpost.id = req.params.blogpostID)
         if (foundBlogpost) {
             res.send(foundBlogpost)
@@ -44,16 +38,16 @@ blogpostsRouter.get("/:blogpostID", (req, res, next) => {
     }
 })
 
-blogpostsRouter.put("/:blogpostID", (req, res, next) => {
+blogpostsRouter.put("/:blogpostID", async (req, res, next) => {
     try {
-        const blogpostsArray = getBlogposts()
+        const blogpostsArray = await getBlogposts()
         const index = blogpostsArray.findIndex(blogpost => blogpost.id === req.params.blogpostID)
 
         if (index !== -1) {
             const oldBlogpost = blogpostsArray[index]
             const updatedBlogpost = { ...oldBlogpost, ...req.body, updatedAt: new Date() }
             blogpostsArray[index] = updatedBlogpost
-            writeBlogposts(blogpostsArray)
+            await writeBlogposts(blogpostsArray)
             res.send(updatedBlogpost)
         } else {
             next(createHttpError(404, `Blogpost with id ${req.params.blogpostID} not found!`))
@@ -63,13 +57,13 @@ blogpostsRouter.put("/:blogpostID", (req, res, next) => {
     }
 })
 
-blogpostsRouter.delete("/:blogpostID", (req, res, next) => {
+blogpostsRouter.delete("/:blogpostID", async (req, res, next) => {
     try {
-        const blogpostsArray = getBlogposts()
+        const blogpostsArray = await getBlogposts()
         const remainingBlogposts = blogpostsArray.filter(blogpost => blogpost.id !== req.params.blogpostID)
 
         if (blogpostsArray.length !== remainingBlogposts.length) {
-            writeBlogposts(remainingBlogposts)
+            await writeBlogposts(remainingBlogposts)
             res.status(204).send()
         } else {
             next(createHttpError(404, `Blogpost with id ${req.params.blogpostID} not found :D`))
@@ -79,9 +73,9 @@ blogpostsRouter.delete("/:blogpostID", (req, res, next) => {
     }
 })
 
-authorsRouter.get("/:authorID/blogposts", (req, res, next) => {
+authorsRouter.get("/:authorID/blogposts", async (req, res, next) => {
     try {
-        const blogpostsArray = getBlogposts()
+        const blogpostsArray = await getBlogposts()
         const blogpostsWithAuthorsID = blogpostsArray.filter(blogpostWithID => blogpostWithID.author.id === req.params.authorID)
         res.send(blogpostsWithAuthorsID)
     } catch (error) {
