@@ -8,15 +8,32 @@ import authorAvatarsRouter from "./api/avatars/index.js"
 import blogpostCoversRouter from "./api/covers/index.js"
 import commentsRouter from "./api/comments/index.js"
 import { genericErrorHandler, badRequestHandler, unauthorizedHandler, notfoundHandler } from "./errorHandlers.js"
+import createHttpError from "http-errors"
 
 const server = Express()
-const port = 3001
+const port = process.env.PORT || 3001
+console.log(port)
 const publicFolderPath = join(process.cwd(), "./public")
 
 //GLOBAL MIDDLEWARES
+//added this to get rid of undefined bodies in request
+
+const whitelist = [process.env.FE_DEV_URL, process.FE_PROD_URL]
+
 server.use(Express.static(publicFolderPath))
-server.use(cors())
-server.use(Express.json()) //added this to get rid of undefined bodies in request
+server.use(
+    cors({
+        origin: (currentOrigin, corsNext) => {
+            if (!currentOrigin || whitelist.indexOf(currentOrigin) !== -1) {
+                corsNext(null, true)
+            } else {
+                corsNext(createHttpError(400, `Origin ${currentOrigin} is not in the whitelist!`))
+            }
+        }
+    })
+)
+
+server.use(Express.json())
 
 //ENDPOINTS
 server.use("/authors", authorsRouter)
