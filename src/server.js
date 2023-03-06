@@ -9,7 +9,6 @@ import blogpostCoversRouter from "./api/covers/index.js"
 import commentsRouter from "./api/comments/index.js"
 import { genericErrorHandler, badRequestHandler, unauthorizedHandler, notfoundHandler } from "./errorHandlers.js"
 import createHttpError from "http-errors"
-import dotenv from "dotenv"
 
 const server = Express()
 const port = process.env.PORT
