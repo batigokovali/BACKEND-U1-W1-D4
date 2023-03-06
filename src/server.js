@@ -1,4 +1,4 @@
-import Express from "Express" //added "type" : "module" to the JSON file
+import Express from "express" //added "type" : "module" to the JSON file
 import { join } from "path"
 import cors from 'cors'
 import listEndpoints from "express-list-endpoints"
