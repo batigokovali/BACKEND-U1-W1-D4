@@ -18,7 +18,7 @@ const publicFolderPath = join(process.cwd(), "./public")
 //GLOBAL MIDDLEWARES
 //added this to get rid of undefined bodies in request
 
-const whitelist = [process.env.FE_DEV_URL, process.FE_PROD_URL]
+const whitelist = [process.env.FE_DEV_URL, process.env.FE_PROD_URL]
 
 server.use(Express.static(publicFolderPath))
 server.use(
